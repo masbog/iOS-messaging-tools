@@ -28,12 +28,19 @@ def on_message(message, data):
             print(payload)
     else:
         print(message)
-
+    
     if data:
         with open('data', 'wb') as f:
             f.write(data)
 
-session = frida.attach("imagent")
+if(len(sys.argv) < 2):
+    print("Use "+sys.argv[0]+" local or " +sys.argv[0]+" usb")
+    sys.exit(0)
+elif(sys.argv[1]=="local"):
+    session = frida.attach("imagent")
+elif(sys.argv[1]=="usb"):
+    session = frida.get_usb_device().attach("imagent")
+
 
 code = open('dumpMessages.js', 'r').read()
 script = session.create_script(code);
